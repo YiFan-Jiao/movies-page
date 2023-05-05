@@ -136,3 +136,41 @@ input {
   width: 100%;
   height: auto;
 }
+
+.search-result {
+  height: auto;
+  font-size: 18px;
+  background-color: #F8F9FA;
+  color: #000;
+  border-radius: 4px;
+  z-index: 9999;
+  position: relative;
+}
+
+.get-movies {
+  padding: 5px;
+}
+
+.get-movies:hover {
+  background-color: #FF7B02;
+  color: #F8F9FA;
+}
+
+.search-city-result {
+  height: auto;
+  font-size: 18px;
+  background-color: #F8F9FA;
+  color: #000;
+  border-radius: 4px;
+  z-index: 9999;
+  position: relative;
+}
+
+.get-city {
+  padding: 5px;
+}
+
+.get-city:hover {
+  background-color: #FF7B02;
+  color: #F8F9FA;
+}

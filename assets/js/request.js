@@ -12,24 +12,8 @@ const options = {
 
 //cities
 const citiesUrl = './assets/js/cities.json';
-const citiesList = select('.big-filter');
 
-function listCities(array) {
-    citiesList.innerHTML = '';
-    let cities = '';
-
-    if(array.length > 0) {
-        array.forEach(city => {
-            cities += `<li>${city.name}</li>`
-        });
-    } else {
-        cities = `<li>cities not found</li>`
-    }
-
-    citiesList.innerHTML = `<ul>${cities}</ul>`
-}
-
-//movies 
+//movies list
 const moviesUrl = 'https://api.andrespecht.dev/movies';
 const moviesList = select('.movies-part');
 
@@ -64,12 +48,88 @@ async function getJson(url,options,listArea) {
         }
 
         const data = await response.json();
-        print(data.response);
-        listArea(data.response);
+        if(data.response) {
+            listArea(data.response)
+        } else {
+            listArea(data.cities);
+        }
     } catch(error) {
         console.log(error.message)
     }
 }
 
 getJson(moviesUrl,options,listMovies);
-getJson(citiesUrl,options,listCities);
+
+//search movies
+const moviesSearch = document.querySelector('.movies-icon');
+const searchMoviesList = select('.search-result');
+
+function searchListMovies(array) {
+    searchMoviesList.innerHTML = '';
+    let movies = '';
+
+    if(array.length > 0) {
+        array.forEach(movie => {
+           if(movie.title.indexOf(moviesSearch.value.trim()) !== -1) {
+            movies += `<div class="get-movies">
+                           ${movie.title} (${movie.year})
+                       </div>`
+           } 
+        });
+    if(movies === '') {
+        movies = `<div class="get-movies">
+                    Movie not found
+                  </div>`
+    }
+    } else {
+        movies = `<li>Movies not found</li>`
+    }
+
+    searchMoviesList.innerHTML = `${movies}`
+}
+
+moviesSearch.addEventListener('keyup', () => {
+    if(moviesSearch.value.trim().length > 1) {
+        searchMoviesList.style.display = 'block'
+        getJson(moviesUrl,options,searchListMovies);
+    } else {
+        searchMoviesList.style.display = 'none'
+    }
+})
+
+//search cities
+const citiesSearch = document.querySelector('.cities-icon');
+const searchCitiesList = select('.search-city-result');
+
+function searchListCities(array) {
+    searchCitiesList.innerHTML = '';
+    let cities = '';
+    
+    if(array.length > 0) {
+        array.forEach(city => {
+           if(city.name.indexOf(citiesSearch.value.trim()) !== -1) {
+            cities += `<div class="get-city">
+                            ${city.name}
+                       </div>`
+           }
+        });
+        if(cities === '') {
+            cities = `<div class="get-city">
+                        City not found
+                      </div>`
+        }
+    } else {
+        cities = `<li>Cities not found</li>`
+    }
+
+    searchCitiesList.innerHTML = `${cities}`
+}
+
+citiesSearch.addEventListener('keyup', () => {
+    if(citiesSearch.value.trim().length > 1) {
+        searchCitiesList.style.display = 'block'
+        getJson(citiesUrl,options,searchListCities);
+    } else {
+        searchCitiesList.style.display = 'none'
+    }
+})
