@@ -2,26 +2,7 @@
 
 import { select, print } from './utils.js';
 
-//
-const url = './assets/js/cities.json';
-const list = select('.big-filter');
-
-function listCities(array) {
-    list.innerHTML = '';
-    let cities = '';
-
-    if(array.length > 0) {
-        array.forEach(city => {
-            cities += `<li>${city.name}</li>`
-        });
-    } else {
-        cities = `<li>not found</li>`
-    }
-
-    list.innerHTML = `<ul>${cities}</ul>`
-}
-
-const options2 = {
+const options = {
     method: 'GET',
     headers: {
         'Content-Type': 'application/json; charset=UTF-8'
@@ -29,25 +10,24 @@ const options2 = {
     mode: 'cors'
 }
 
-async function getCities() {
-    try {
-        const response = await fetch(url, options);
+//cities
+const citiesUrl = './assets/js/cities.json';
+const citiesList = select('.big-filter');
 
-        if(!response.ok) {
-            throw new Error(`${response.statusText}: ${response.status}`);
-        }
+function listCities(array) {
+    citiesList.innerHTML = '';
+    let cities = '';
 
-        const data = await response.json();
-        print(data.cities);
-        listCities(data.cities);
-    } catch(error) {
-        console.log(error.message)
+    if(array.length > 0) {
+        array.forEach(city => {
+            cities += `<li>${city.name}</li>`
+        });
+    } else {
+        cities = `<li>cities not found</li>`
     }
+
+    citiesList.innerHTML = `<ul>${cities}</ul>`
 }
-
-getCities();
-
-
 
 //movies 
 const moviesUrl = 'https://api.andrespecht.dev/movies';
@@ -75,15 +55,7 @@ function listMovies(array) {
     moviesList.innerHTML = `${movies}`
 }
 
-const options = {
-    method: 'GET',
-    headers: {
-        'Content-Type': 'application/json; charset=UTF-8'
-    },
-    mode: 'cors'
-}
-
-async function getJson(url,options) {
+async function getJson(url,options,listArea) {
     try {
         const response = await fetch(url, options);
 
@@ -93,11 +65,11 @@ async function getJson(url,options) {
 
         const data = await response.json();
         print(data.response);
-
-        listMovies(data.response);
+        listArea(data.response);
     } catch(error) {
         console.log(error.message)
     }
 }
 
-getJson(moviesUrl,options);
+getJson(moviesUrl,options,listMovies);
+getJson(citiesUrl,options,listCities);
